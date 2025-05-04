@@ -6,25 +6,34 @@
       "es2020"
     ],
     "declaration": true,
+    "declarationDir": "./types",
+    "outDir": "./dist",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": false,
+    "noFallthroughCasesInSwitch": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "baseUrl": "./lib",
+    "paths": {
+      "@constructs/*": ["constructs/*"],
+      "@stacks/*": ["stacks/*"]
+    }
   },
   "exclude": [
     "node_modules",
-    "cdk.out"
+    "cdk.out",
+    "types",
+    "dist"
   ]
 }
