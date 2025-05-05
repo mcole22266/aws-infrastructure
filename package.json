@@ -10,7 +10,8 @@
     "test": "jest",
     "cdk": "cdk",
     "synth": "cdk synth",
-    "deploy": "cdk deploy --all"
+    "deploy": "cdk deploy --all",
+    "sync-folders": "bash lib/resources/sync_folders.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
