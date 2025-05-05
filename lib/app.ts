@@ -1,5 +1,5 @@
-import { App } from "aws-cdk-lib";
-import { Stacks } from "./stacks";
+import { App } from 'aws-cdk-lib';
+import { Stacks } from './stacks';
 
 export const app: App = new App();
 

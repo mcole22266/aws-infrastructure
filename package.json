@@ -2,7 +2,7 @@
   "name": "aws-infrastructure",
   "version": "0.1.0",
   "scripts": {
-    "build": "npm run clean && tsc --project tsconfig.json && npm run lint && npm run synth",
+    "build": "npm run clean && npm run format && tsc --project tsconfig.json && npm run lint && npm run synth",
     "clean": "rimraf dist types lib/**/*.js lib/**/*.d.ts cdk.out",
     "watch": "tsc --watch",
     "lint": "eslint 'lib/**/*.{ts,tsx}'",
