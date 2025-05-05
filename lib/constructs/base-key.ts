@@ -6,14 +6,14 @@ import { Construct } from 'constructs';
 import { Config } from '../config';
 
 export interface BaseKeyProps extends KeyProps {
-  /**
-   * The alias of the key. This will be prefixed with the APP_PREFIX
-   */
-  alias: string;
-  /**
-   * The description of the key
-   */
-  description: string;
+    /**
+     * The alias of the key. This will be prefixed with the APP_PREFIX
+     */
+    alias: string;
+    /**
+     * The description of the key
+     */
+    description: string;
 }
 
 /**
@@ -21,19 +21,19 @@ export interface BaseKeyProps extends KeyProps {
  * keys with common properties and defaults.
  */
 export class BaseKey extends Key {
-  constructor(scope: Construct, id: string, props: BaseKeyProps) {
-    super(scope, id, {
-      ...props,
-      // Enforce an Alias and a Description
-      alias: `${Config.APP_PREFIX}/${props.alias}`, // Add Prefix
-      description: props.description,
-      // Ensure Key Security
-      enableKeyRotation: props.enableKeyRotation ?? true,
-      enabled: props.enabled ?? true,
-      // Always ensure Michael User is able to access the Key
-      admins: [User.fromUserName(scope, 'MichaelUser', IamUser.MICHAEL)],
-      // Manage Key Retention
-      removalPolicy: props.removalPolicy ?? RemovalPolicy.RETAIN,
-    });
-  }
+    constructor(scope: Construct, id: string, props: BaseKeyProps) {
+        super(scope, id, {
+            ...props,
+            // Enforce an Alias and a Description
+            alias: `${Config.APP_PREFIX}/${props.alias}`, // Add Prefix
+            description: props.description,
+            // Ensure Key Security
+            enableKeyRotation: props.enableKeyRotation ?? true,
+            enabled: props.enabled ?? true,
+            // Always ensure Michael User is able to access the Key
+            admins: [User.fromUserName(scope, 'MichaelUser', IamUser.MICHAEL)],
+            // Manage Key Retention
+            removalPolicy: props.removalPolicy ?? RemovalPolicy.RETAIN,
+        });
+    }
 }

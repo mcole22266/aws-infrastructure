@@ -11,26 +11,28 @@ import { Config } from '../config';
  * and other related resources
  */
 export class BackupStack extends BaseStack {
-  constructor(scope: Construct, id: string, props: BaseStackProps) {
-    super(scope, id, props);
+    constructor(scope: Construct, id: string, props: BaseStackProps) {
+        super(scope, id, props);
 
-    const backupBucketKey: BaseKey = new BaseKey(this, 'BackupBucketKey', {
-      alias: 'BackupBucketKey',
-      description: 'KMS Key used for encrypting the Backup Bucket',
-    });
+        const backupBucketKey: BaseKey = new BaseKey(this, 'BackupBucketKey', {
+            alias: 'BackupBucketKey',
+            description: 'KMS Key used for encrypting the Backup Bucket',
+        });
 
-    const backupBucket: BaseBucket = new BaseBucket(this, 'BackupBucket', {
-      bucketName: 'backup-bucket',
-      encryptionKey: backupBucketKey,
-    });
+        const backupBucket: BaseBucket = new BaseBucket(this, 'BackupBucket', {
+            bucketName: 'backup-bucket',
+            encryptionKey: backupBucketKey,
+        });
 
-    // Build LifeCycle Rules from the Config to slowly move new data to colder/cheaper storage
-    backupBucket.addLifecycleRule({
-      transitions: Config.BACKUP_BUCKET_STORAGE_CLASS_SEQUENCE.map((storageClass: StorageClass, index: number) => ({
-        storageClass,
-        // The first transition should be 0 days (immediate). Each iteration should multiply days by the index
-        transitionAfter: Duration.days(Config.BACKUP_BUCKET_STORAGE_CLASS_TRANSITION_DAYS * index),
-      })),
-    });
-  }
+        // Build LifeCycle Rules from the Config to slowly move new data to colder/cheaper storage
+        backupBucket.addLifecycleRule({
+            transitions: Config.BACKUP_BUCKET_STORAGE_CLASS_SEQUENCE.map(
+                (storageClass: StorageClass, index: number) => ({
+                    storageClass,
+                    // The first transition should be 0 days (immediate). Each iteration should multiply days by the index
+                    transitionAfter: Duration.days(Config.BACKUP_BUCKET_STORAGE_CLASS_TRANSITION_DAYS * index),
+                })
+            ),
+        });
+    }
 }
