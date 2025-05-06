@@ -19,8 +19,6 @@ export class Config {
      * to more cheaper Storage Classes over time
      */
     public static readonly BACKUP_BUCKET_STORAGE_CLASS_SEQUENCE: StorageClass[] = [
-        // Cost Estimate: $7.20/TB - retrieval is instant but costly
-        StorageClass.GLACIER_INSTANT_RETRIEVAL,
         // Cost Estimate: $3.60/TB - retrieval takes minutes to hours
         StorageClass.GLACIER,
         // Cost Estimate: $0.99/TB - retrieval takes 12+ hours
