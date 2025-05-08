@@ -20,7 +20,7 @@ export class BackupStack extends BaseStack {
         });
 
         const backupBucket: BaseBucket = new BaseBucket(this, 'BackupBucket', {
-            bucketName: 'backup-bucket',
+            bucketNamePrefix: 'backup-bucket',
             encryptionKey: backupBucketKey,
             versioned: false, // We explicitly don't want Versions here. This is just a backup
         });

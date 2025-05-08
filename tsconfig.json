@@ -25,10 +25,6 @@
       "./node_modules/@types"
     ],
     "baseUrl": "./lib",
-    "paths": {
-      "@constructs/*": ["constructs/*"],
-      "@stacks/*": ["stacks/*"]
-    }
   },
   "exclude": [
     "node_modules",

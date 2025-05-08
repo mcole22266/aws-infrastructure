@@ -15,7 +15,7 @@ export interface BaseStackProps {
 }
 
 /**
- * BaseStack is a base class for all stacks in the application.
+ * BaseStack is a base class for all {@link Stack}s in the application.
  *
  * It sets the following defaults:
  * - Sets the Stack Name

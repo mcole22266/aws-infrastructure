@@ -17,7 +17,7 @@ export interface BaseKeyProps extends KeyProps {
 }
 
 /**
- * BaseKey is a wrapper around the Key construct that is used to create
+ * BaseKey is a wrapper around the {@link Key} construct that is used to create
  * keys with common properties and defaults.
  */
 export class BaseKey extends Key {

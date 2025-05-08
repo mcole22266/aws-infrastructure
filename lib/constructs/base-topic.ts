@@ -20,7 +20,7 @@ export interface BaseTopicProps extends TopicProps {
 }
 
 /**
- * BaseTopic is a wrapper around the Topic construct that is used to create
+ * BaseTopic is a wrapper around the {@link Topic} construct that is used to create
  * topics with common properties and defaults.
  */
 export class BaseTopic extends Topic {
