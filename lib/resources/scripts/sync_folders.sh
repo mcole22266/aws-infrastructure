@@ -43,6 +43,9 @@ sync_folder "/media/michael/Ubuntu Internal/TTRPGs" "TTRPGs"
 # Games
 sync_folder "/media/michael/Ubuntu Internal/Games" "Games"
 
+# 3d Printing Files
+sync_folder "/home/michael/Documents/3d Printing" "3d Printing"
+
 echo "[$(date)] ✅ Full sync completed." | tee -a "$LOCAL_LOGFILE"
 
 # ==== UPLOAD LOG FILE TO S3 ====
