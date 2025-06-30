@@ -11,12 +11,10 @@ export interface BaseTopicProps extends TopicProps {
      */
     topicName: string;
     /**
-     * The encryption key to use for the topic.
-     * If not provided, a new key will be created.
-     *
-     * @default "A BaseKey will be created"
+     * The encryption key to use for the topic. Require a KMS Key to keep costs low
+     * while keeping logs encrypted
      */
-    encryptionKey?: BaseKey;
+    encryptionKey: BaseKey;
 }
 
 /**
@@ -25,21 +23,13 @@ export interface BaseTopicProps extends TopicProps {
  */
 export class BaseTopic extends Topic {
     constructor(scope: Construct, id: string, props: BaseTopicProps) {
-        // Create a Key if one is not provided
-        const encryptionKey: BaseKey =
-            props.encryptionKey ??
-            new BaseKey(scope, `${id}-BaseKey`, {
-                alias: `${id}-key`,
-                description: `Key automatically created for ${props.topicName}`,
-            });
-
         super(scope, id, {
             ...props,
             // Enforce a Topic Name - prefixing it with the App Prefix
             displayName: `${Config.APP_PREFIX}-${props.topicName}`,
             // Require SSL and Encryption
             enforceSSL: true,
-            masterKey: encryptionKey,
+            masterKey: props.encryptionKey,
         });
 
         // Ensure Secure Transport is enforced - HTTPS-only connections

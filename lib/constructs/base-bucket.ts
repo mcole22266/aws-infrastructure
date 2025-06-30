@@ -5,10 +5,10 @@ import { BaseKey } from './base-key';
 
 /**
  * Properties for creating a BaseBucket.
- * 
+ *
  * BaseBucketProps extends BucketProps but omits certain properties that are
  * enforced by the BaseBucket construct to ensure security best practices.
- * 
+ *
  * @example
  * ```typescript
  * new BaseBucket(this, 'MyBucket', {
@@ -17,68 +17,67 @@ import { BaseKey } from './base-key';
  *   removalPolicy: RemovalPolicy.DESTROY // override default RETAIN
  * });
  * ```
- * 
+ *
  * @extends Omit<BucketProps, 'bucketName' | 'encryption' | 'bucketKeyEnabled'>
  */
 export interface BaseBucketProps extends Omit<BucketProps, 'bucketName' | 'encryption' | 'bucketKeyEnabled'> {
     /**
-     * The prefix for the bucket name. 
-     * 
+     * The prefix for the bucket name.
+     *
      * This will be automatically appended with the account ID and region to ensure
      * global uniqueness and clear ownership (e.g., "my-bucket-123456789012-us-east-1").
-     * 
+     *
      * Must not contain capital letters as per S3 bucket naming requirements.
      */
     bucketNamePrefix: string;
-    
+
     /**
      * The KMS key to use for bucket encryption.
-     * 
-     * If not provided, a new BaseKey will be automatically created with an alias
-     * derived from the bucket name prefix.
-     * 
+     *
+     * A key must be provided to keep costs low with a single project-level KMS Key
+     *
      * @default A new BaseKey is created with alias `${bucketNamePrefix}-key`
      */
-    encryptionKey?: BaseKey;
+    encryptionKey: BaseKey;
 }
 
 /**
  * A secure S3 bucket with best practices enforced.
- * 
+ *
  * BaseBucket extends the standard CDK Bucket construct but enforces security
  * best practices and naming conventions:
- * 
+ *
  * - KMS encryption is always enabled
  * - Public access is always blocked
  * - SSL is always enforced
  * - Bucket names follow a consistent pattern with account ID and region
  * - Removal policy defaults to RETAIN to prevent accidental deletion
- * 
+ *
  * @example
  * ```typescript
  * // Create a bucket with default settings
  * const dataBucket = new BaseBucket(this, 'DataBucket', {
  *   bucketNamePrefix: 'company-data'
  * });
- * 
+ *
  * // Create a bucket with a custom KMS key
  * const key = new BaseKey(this, 'CustomKey', {
  *   alias: 'custom-encryption-key',
  *   description: 'Custom encryption key for sensitive data'
  * });
- * 
+ *
  * const secureBucket = new BaseBucket(this, 'SecureBucket', {
  *   bucketNamePrefix: 'sensitive-data',
  *   encryptionKey: key
  * });
  * ```
- * 
+ *
  * @extends Bucket
  */
 export class BaseBucket extends Bucket {
     /**
      * Creates a new BaseBucket with security best practices.
-     * 
+     *
      * @param scope - The construct scope
      * @param id - The construct ID
      * @param props - The bucket properties
@@ -92,16 +91,13 @@ export class BaseBucket extends Bucket {
             throw new Error('Bucket Name must not contain capital letters');
         }
 
-        // Create a Key if one is not provided
-        const encryptionKey: BaseKey = props.encryptionKey ?? createDefaultKey(scope, id, props);
-
         super(scope, id, {
             ...props,
             // Automatically append Account ID and Region to Bucket Names
             bucketName: `${props.bucketNamePrefix}-${stack.account}-${stack.region}`,
             // Enforce KMS Encryption on Buckets
             encryption: BucketEncryption.KMS,
-            encryptionKey: encryptionKey,
+            encryptionKey: props.encryptionKey,
             bucketKeyEnabled: true,
             // Enforce object retention on deletion
             autoDeleteObjects: props.autoDeleteObjects ?? false,
@@ -111,20 +107,4 @@ export class BaseBucket extends Bucket {
             enforceSSL: true,
         });
     }
-}
-
-/**
- * Creates a default encryption key for a bucket.
- * 
- * @param scope - The construct scope
- * @param id - The construct ID
- * @param props - The bucket properties
- * @returns A new BaseKey with an alias derived from the bucket name prefix
- * @internal
- */
-function createDefaultKey(scope: Construct, id: string, props: BaseBucketProps): BaseKey {
-    return new BaseKey(scope, `${id}-BaseKey`, {
-        alias: `${props.bucketNamePrefix}-key`,
-        description: `Key automatically created for ${props.bucketNamePrefix}`,
-    });
 }

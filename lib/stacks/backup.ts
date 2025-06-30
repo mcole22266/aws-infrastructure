@@ -1,27 +1,26 @@
 import { BaseBucket } from '../constructs/base-bucket';
 import { BaseStack, BaseStackProps } from '../constructs/base-stack';
 import { Construct } from 'constructs';
-import { BaseKey } from '../constructs/base-key';
 import { StorageClass } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib';
 import { Config } from '../config';
+import { GeneralStack } from './general';
+
+export interface BackupStackProps extends BaseStackProps {
+    generalStack: GeneralStack;
+}
 
 /**
  * BackupStack is a stack that is used to create Backup Resources for 3-2-1 Backups
  * and other related resources
  */
 export class BackupStack extends BaseStack {
-    constructor(scope: Construct, id: string, props: BaseStackProps) {
+    constructor(scope: Construct, id: string, props: BackupStackProps) {
         super(scope, id, props);
-
-        const backupBucketKey: BaseKey = new BaseKey(this, 'BackupBucketKey', {
-            alias: 'BackupBucketKey',
-            description: 'KMS Key used for encrypting the Backup Bucket',
-        });
 
         const backupBucket: BaseBucket = new BaseBucket(this, 'BackupBucket', {
             bucketNamePrefix: 'backup-bucket',
-            encryptionKey: backupBucketKey,
+            encryptionKey: props.generalStack.projectKey,
             versioned: false, // We explicitly don't want Versions here. This is just a backup
         });
 
